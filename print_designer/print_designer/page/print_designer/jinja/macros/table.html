@@ -7,8 +7,9 @@
             <thead>
             {% if element.columns %}
                 <tr>
+            {% set header_radius = element.headerStyle.get('borderRadius') %}
             {% for column in element.columns%}
-                    <th style="{% if column.width %}width: {{column.width}}%; max-width: {{column.width}}%;{%endif%} {{convert_css(element.headerStyle)}}{% if not element.removeOuterBorder %}border-top-style: solid !important;{% endif %}border-bottom-style: solid !important;{% if loop.first and not element.removeOuterBorder %}border-left-style: solid !important;{% elif loop.last and not element.removeOuterBorder %}border-right-style: solid !important;{% endif %}{%- if column.applyStyleToHeader and column.style -%}{{convert_css(column.style)}}{%- endif -%}">
+                    <th style="{% if column.width %}width: {{column.width}}%; max-width: {{column.width}}%;{%endif%} {{convert_css(element.headerStyle)}} border-radius: 0 !important; {% if header_radius %}{% if loop.first %}border-top-left-radius: {{ header_radius }} !important; border-bottom-left-radius: {{ header_radius }} !important;{% endif %}{% if loop.last %}border-top-right-radius: {{ header_radius }} !important; border-bottom-right-radius: {{ header_radius }} !important;{% endif %}{% endif %}{% if not element.removeOuterBorder %}border-top-style: solid !important;{% endif %}border-bottom-style: solid !important;{% if loop.first and not element.removeOuterBorder %}border-left-style: solid !important;{% elif loop.last and not element.removeOuterBorder %}border-right-style: solid !important;{% endif %}{%- if column.applyStyleToHeader and column.style -%}{{convert_css(column.style)}}{%- endif -%}">
                     {{ _(column.label) }}
                     </th>
             {% endfor %}
