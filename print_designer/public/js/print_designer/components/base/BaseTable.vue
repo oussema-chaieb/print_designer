@@ -34,7 +34,8 @@
 									width: `${column.width}%`,
 									maxWidth: `${column.width}%`,
 								},
-								headerStyle,
+								headerStyleSansRadius,
+								headerCornerStyle(index),
 								column.applyStyleToHeader && column.style,
 							]"
 							v-for="(column, index) in columns"
@@ -125,7 +126,7 @@ import {
 	deleteCurrentElements,
 	widthHeightStyle,
 } from "../../utils";
-import { toRefs, ref, watch } from "vue";
+import { toRefs, ref, watch, computed } from "vue";
 import { useDraw } from "../../composables/Draw";
 import BaseResizeHandles from "./BaseResizeHandles.vue";
 import AppTableContextMenu from "../layout/AppTableContextMenu.vue";
@@ -167,6 +168,24 @@ const {
 	selectedDynamicText,
 	DOMRef,
 } = toRefs(props.object);
+
+// Prevent header border-radius from applying to every cell; only round outer corners
+const headerStyleSansRadius = computed(() => {
+    const s = { ...(headerStyle?.value || {}) };
+    if (s.borderRadius !== undefined) delete s.borderRadius;
+    return s;
+});
+
+const headerCornerStyle = (idx) => {
+    const radius = headerStyle?.value?.borderRadius || 0;
+    if (!radius) return {};
+    const lastIdx = (columns?.value?.length || 0) - 1;
+    return {
+        borderRadius: 0,
+        ...(idx === 0 ? { borderTopLeftRadius: radius } : {}),
+        ...(idx === lastIdx ? { borderTopRightRadius: radius } : {}),
+    };
+};
 
 watch(
 	() => selectedColumn.value,
