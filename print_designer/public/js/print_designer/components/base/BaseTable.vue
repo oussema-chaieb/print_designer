@@ -445,16 +445,21 @@ const handleMouseUp = (e, tablewidth) => {
 			tr:first-child th {
 				border-top-style: none !important;
 			}
-			tr th:first-child,
-			tr td:first-child {
+			tr th:first-child {
 				border-left-style: none !important;
 			}
-			tr th:last-child,
-			tr td:last-child {
+			tr th:last-child {
 				border-right-style: none !important;
 			}
-			/* Also remove bottom border on the last row */
-			tr:last-child td {
+			/* Remove outer borders on body cells via deep selectors (child component) */
+			:deep(.printTable tr td:first-child) {
+				border-left-style: none !important;
+			}
+			:deep(.printTable tr td:last-child) {
+				border-right-style: none !important;
+			}
+			/* Also remove bottom border on the last row via deep selector */
+			:deep(.printTable tr:last-child td) {
 				border-bottom-style: none !important;
 			}
 		}
