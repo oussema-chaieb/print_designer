@@ -908,6 +908,44 @@ export const createPropertiesPanel = () => {
 			],
 			[
 				{
+					label: "Remove Outside Border",
+					name: "removeOutsideBorder",
+					isLabelled: true,
+					labelDirection: "column",
+					condtional: () =>
+						MainStore.getCurrentElementsValues[0]?.type == "table",
+					frappeControl: (ref, name) => {
+						const MainStore = useMainStore();
+						makeFeild({
+							name,
+							ref,
+							fieldtype: "Select",
+							requiredData: [MainStore.getCurrentElementsValues[0]],
+							reactiveObject: () => MainStore.getCurrentElementsValues[0],
+							propertyName: "removeOuterBorder",
+							isStyle: false,
+							options: () => [
+								{ label: "Yes", value: "Yes" },
+								{ label: "No", value: "No" },
+							],
+							formatValue: (object, property, isStyle) => {
+								if (!object) return;
+								return object[property] ? "Yes" : "No";
+							},
+							onChangeCallback: (value = null) => {
+								if (value && MainStore.getCurrentElementsValues[0]) {
+									MainStore.getCurrentElementsValues[0].removeOuterBorder =
+										value === "Yes";
+									MainStore.frappeControls[name].$input.blur();
+								}
+							},
+						});
+					},
+					flex: 1,
+				},
+			],
+			[
+				{
 					label: "Apply Style to Header",
 					name: "applyStyleToHeader",
 					isLabelled: true,

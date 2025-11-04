@@ -12,6 +12,7 @@
 		:class="[
 			'table-container',
 			classes,
+			removeOuterBorder && 'no-outer-border',
 			MainStore.getCurrentElementsId.includes(id) && 'active-elements',
 		]"
 	>
@@ -161,6 +162,7 @@ const {
 	labelStyle,
 	headerStyle,
 	altStyle,
+	removeOuterBorder,
 	classes,
 	PreviewRowNo,
 	styleEditMode,
@@ -437,6 +439,21 @@ const handleMouseUp = (e, tablewidth) => {
 		cursor: col-resize;
 		user-select: none;
 		border-right: 1px solid transparent;
+	}
+	&.no-outer-border {
+		.printTable {
+			tr:first-child th {
+				border-top-style: none !important;
+			}
+			tr th:first-child,
+			tr td:first-child {
+				border-left-style: none !important;
+			}
+			tr th:last-child,
+			tr td:last-child {
+				border-right-style: none !important;
+			}
+		}
 	}
 }
 

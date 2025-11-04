@@ -151,6 +151,7 @@ export const createTable = (cordinates, parent = null) => {
 		labelStyle: {},
 		headerStyle: {},
 		altStyle: {},
+		removeOuterBorder: false,
 		heightType: "auto",
 		classes: [],
 	};

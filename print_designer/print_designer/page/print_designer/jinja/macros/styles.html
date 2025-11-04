@@ -61,6 +61,25 @@
     tr td:last-child {
         border-right-style: solid !important;
     }
+    /* Suppress outside borders when table has no-outer-border */
+    .no-outer-border tr:first-child th {
+        border-top-style: none !important;
+    }
+    .no-outer-border tr th:first-child {
+        border-left-style: none !important;
+    }
+    .no-outer-border tr th:last-child {
+        border-right-style: none !important;
+    }
+    .no-outer-border tr:last-child td {
+        border-bottom-style: none !important;
+    }
+    .no-outer-border tr td:first-child {
+        border-left-style: none !important;
+    }
+    .no-outer-border tr td:last-child {
+        border-right-style: none !important;
+    }
     .flexDynamicText .baseSpanTag {
 		 display: block;
     }
