@@ -3,13 +3,15 @@
     {%- if settings.get("schema_version") == "1.1.0" -%}
         {%- set heightType = "auto" if element.get("isDynamicHeight", False) else "fixed" -%}
     {%- endif -%}
+    {%- set header_style = element.get('headerStyle', {}) -%}
+    {%- set body_style = element.get('style', {}) -%}
     <table style="position:{%- if heightType != 'fixed' -%}relative{% else %}absolute{%- endif -%}; {%- if heightType == 'fixed' -%}top: {%- else -%}margin-top: {%- endif -%}{{ element.startY }}px; left:{{ element.startX }}px; width:{{ element.width }}px;{%- if heightType != 'fixed' and heightType != 'auto' -%}{%- if heightType == 'auto-min-height' -%}min-{%- endif -%}height:{{ element.height }}px;{%- endif -%} max-width:{{ element.width }}px;" class="table-container printTable {% if element.removeOuterBorder %}no-outer-border{% endif %} {{ element.classes | join(' ') }}">
             <thead>
             {% if element.columns %}
                 <tr>
-            {% set header_radius = element.headerStyle.get('borderRadius') %}
+            {% set header_radius = header_style.get('borderRadius') %}
             {% for column in element.columns%}
-                    <th style="{% if column.width %}width: {{column.width}}%; max-width: {{column.width}}%;{%endif%} {{convert_css(element.headerStyle)}} border-radius: 0 !important; {% if header_radius %}{% if loop.first %}border-top-left-radius: {{ header_radius }} !important; border-bottom-left-radius: {{ header_radius }} !important;{% endif %}{% if loop.last %}border-top-right-radius: {{ header_radius }} !important; border-bottom-right-radius: {{ header_radius }} !important;{% endif %}{% endif %}{% if not element.removeOuterBorder %}border-top-style: solid !important;{% else %}border-top-style: none !important;{% endif %}border-bottom-style: solid !important;{% if loop.first %}{% if not element.removeOuterBorder %}border-left-style: solid !important;{% else %}border-left-style: none !important;{% endif %}{% elif loop.last %}{% if not element.removeOuterBorder %}border-right-style: solid !important;{% else %}border-right-style: none !important;{% endif %}{% endif %}{%- if column.applyStyleToHeader and column.style -%}{{convert_css(column.style)}}{%- endif -%}">
+                    <th style="{% if column.width %}width: {{column.width}}%; max-width: {{column.width}}%;{%endif%} {{convert_css(header_style)}} border-radius: 0 !important; {% if header_radius %}{% if loop.first %}border-top-left-radius: {{ header_radius }} !important; border-bottom-left-radius: {{ header_radius }} !important;{% endif %}{% if loop.last %}border-top-right-radius: {{ header_radius }} !important; border-bottom-right-radius: {{ header_radius }} !important;{% endif %}{% endif %}{% if element.removeOuterBorder or header_style.get('borderTopStyle') == 'none' %}border-top-style: none !important;{% else %}border-top-style: solid !important;{% endif %}border-bottom-style: solid !important;{% if loop.first %}{% if element.removeOuterBorder or header_style.get('borderLeftStyle') == 'none' %}border-left-style: none !important;{% else %}border-left-style: solid !important;{% endif %}{% elif loop.last %}{% if element.removeOuterBorder or header_style.get('borderRightStyle') == 'none' %}border-right-style: none !important;{% else %}border-right-style: solid !important;{% endif %}{% endif %}{%- if column.applyStyleToHeader and column.style -%}{{convert_css(column.style)}}{%- endif -%}">
                     {{ _(column.label) }}
                     </th>
             {% endfor %}
@@ -22,7 +24,7 @@
                 <tr>
                     {% set isLastRow = loop.last %}
                 {% for column in element.columns%}
-                    <td style="{{convert_css(element.style)}}{%if row.idx % 2 == 0 %}{{convert_css(element.altStyle)}}{%endif%}{% if isLastRow %}{% if not element.removeOuterBorder %}border-bottom-style: solid !important;{% else %}border-bottom-style: none !important;{% endif %}{% endif %}{% if loop.first %}{% if not element.removeOuterBorder %}border-left-style: solid !important;{% else %}border-left-style: none !important;{% endif %}{% elif loop.last %}{% if not element.removeOuterBorder %}border-right-style: solid !important;{% else %}border-right-style: none !important;{% endif %}{% endif %}{%- if column.style -%}{{convert_css(column.style)}}{%- endif -%}">
+                    <td style="{{convert_css(body_style)}}{%if row.idx % 2 == 0 %}{{convert_css(element.altStyle)}}{%endif%}{% if isLastRow %}{% if element.removeOuterBorder or body_style.get('borderBottomStyle') == 'none' %}border-bottom-style: none !important;{% else %}border-bottom-style: solid !important;{% endif %}{% endif %}{% if loop.first %}{% if element.removeOuterBorder or body_style.get('borderLeftStyle') == 'none' %}border-left-style: none !important;{% else %}border-left-style: solid !important;{% endif %}{% elif loop.last %}{% if element.removeOuterBorder or body_style.get('borderRightStyle') == 'none' %}border-right-style: none !important;{% else %}border-right-style: solid !important;{% endif %}{% endif %}{%- if column.style -%}{{convert_css(column.style)}}{%- endif -%}">
                 {% if column is mapping %}
                     {% for field in column.dynamicContent%}
                         {{ span_tag(field, element, row, send_to_jinja) }}
