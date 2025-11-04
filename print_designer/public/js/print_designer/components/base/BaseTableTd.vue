@@ -63,13 +63,14 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-tr:last-child td {
-	border-bottom-style: solid !important;
+/* Apply outside-edge borders on body only when the table container does NOT have no-outer-border */
+.table-container:not(.no-outer-border) tr:last-child td {
+    border-bottom-style: solid !important;
 }
-tr td:first-child {
-	border-left-style: solid !important;
+.table-container:not(.no-outer-border) tr td:first-child {
+    border-left-style: solid !important;
 }
-tr td:last-child {
-	border-right-style: solid !important;
+.table-container:not(.no-outer-border) tr td:last-child {
+    border-right-style: solid !important;
 }
 </style>
