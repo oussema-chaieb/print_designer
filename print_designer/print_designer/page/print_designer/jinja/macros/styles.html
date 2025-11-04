@@ -82,6 +82,22 @@
     .no-outer-border tr td:last-child {
         border-right-style: none !important;
     }
+    /* Variant that keeps bottom border while removing other outside borders */
+    .no-outer-border-keep-bottom tr:first-child th {
+        border-top-style: none !important;
+    }
+    .no-outer-border-keep-bottom tr th:first-child {
+        border-left-style: none !important;
+    }
+    .no-outer-border-keep-bottom tr th:last-child {
+        border-right-style: none !important;
+    }
+    .no-outer-border-keep-bottom tr td:first-child {
+        border-left-style: none !important;
+    }
+    .no-outer-border-keep-bottom tr td:last-child {
+        border-right-style: none !important;
+    }
     .flexDynamicText .baseSpanTag {
 		 display: block;
     }

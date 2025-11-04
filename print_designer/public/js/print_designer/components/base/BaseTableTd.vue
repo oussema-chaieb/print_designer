@@ -65,7 +65,7 @@ const props = defineProps({
         required: false,
     },
     removeOuterBorder: {
-        type: Boolean,
+        type: [Boolean, String],
         required: false,
         default: false,
     },
@@ -81,7 +81,10 @@ const outerEdgeStyle = (colIdx, totalCols, isLastRow) => {
     const styles = [];
     if (colIdx === 0) styles.push("border-left-style: none !important;");
     if (colIdx === totalCols - 1) styles.push("border-right-style: none !important;");
-    if (isLastRow) styles.push("border-bottom-style: none !important;");
+    // Only suppress bottom when fully removing borders (not in keep-bottom mode)
+    if (isLastRow && props.removeOuterBorder !== "YesKeepBottom") {
+        styles.push("border-bottom-style: none !important;");
+    }
     return styles.join(" ");
 };
 </script>

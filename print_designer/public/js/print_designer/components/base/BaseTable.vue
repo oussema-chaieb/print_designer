@@ -12,7 +12,8 @@
 		:class="[
 			'table-container',
 			classes,
-			removeOuterBorder && 'no-outer-border',
+			removeOuterBorder === 'YesKeepBottom' && 'no-outer-border-keep-bottom',
+			removeOuterBorder && removeOuterBorder !== 'YesKeepBottom' && 'no-outer-border',
 			MainStore.getCurrentElementsId.includes(id) && 'active-elements',
 		]"
 	>
@@ -480,6 +481,27 @@ const handleMouseUp = (e, tablewidth) => {
 			/* Also remove bottom border on the last row via deep selector */
 			:deep(.printTable tr:last-child td) {
 				border-bottom-style: none !important;
+			}
+		}
+	}
+
+	&.no-outer-border-keep-bottom {
+		.printTable {
+			tr:first-child th {
+				border-top-style: none !important;
+			}
+			tr th:first-child {
+				border-left-style: none !important;
+			}
+			tr th:last-child {
+				border-right-style: none !important;
+			}
+			/* Remove outer left/right on body cells but keep bottom */
+			:deep(.printTable tr td:first-child) {
+				border-left-style: none !important;
+			}
+			:deep(.printTable tr td:last-child) {
+				border-right-style: none !important;
 			}
 		}
 	}

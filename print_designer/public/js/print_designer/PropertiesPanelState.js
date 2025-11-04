@@ -924,21 +924,29 @@ export const createPropertiesPanel = () => {
 							reactiveObject: () => MainStore.getCurrentElementsValues[0],
 							propertyName: "removeOuterBorder",
 							isStyle: false,
-							options: () => [
-								{ label: "Yes", value: "Yes" },
-								{ label: "No", value: "No" },
-							],
-							formatValue: (object, property, isStyle) => {
-								if (!object) return;
-								return object[property] ? "Yes" : "No";
-							},
-							onChangeCallback: (value = null) => {
-								if (value && MainStore.getCurrentElementsValues[0]) {
-									MainStore.getCurrentElementsValues[0].removeOuterBorder =
-										value === "Yes";
-									MainStore.frappeControls[name].$input.blur();
-								}
-							},
+                            options: () => [
+                                { label: "Yes", value: "Yes" },
+                                { label: "Yes (keep bottom)", value: "YesKeepBottom" },
+                                { label: "No", value: "No" },
+                            ],
+                            formatValue: (object, property, isStyle) => {
+                                if (!object) return;
+                                const v = object[property];
+                                if (v === true) return "Yes";
+                                if (v === "YesKeepBottom") return "Yes (keep bottom)";
+                                return "No";
+                            },
+                            onChangeCallback: (value = null) => {
+                                if (value && MainStore.getCurrentElementsValues[0]) {
+                                    MainStore.getCurrentElementsValues[0].removeOuterBorder =
+                                        value === "Yes"
+                                            ? true
+                                            : value === "YesKeepBottom"
+                                            ? "YesKeepBottom"
+                                            : false;
+                                    MainStore.frappeControls[name].$input.blur();
+                                }
+                            },
 						});
 					},
 					flex: 1,
