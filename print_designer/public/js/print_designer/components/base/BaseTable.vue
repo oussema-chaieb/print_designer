@@ -182,8 +182,12 @@ const headerCornerStyle = (idx) => {
     const lastIdx = (columns?.value?.length || 0) - 1;
     return {
         borderRadius: 0,
-        ...(idx === 0 ? { borderTopLeftRadius: radius } : {}),
-        ...(idx === lastIdx ? { borderTopRightRadius: radius } : {}),
+        ...(idx === 0
+            ? { borderTopLeftRadius: radius, borderBottomLeftRadius: radius }
+            : {}),
+        ...(idx === lastIdx
+            ? { borderTopRightRadius: radius, borderBottomRightRadius: radius }
+            : {}),
     };
 };
 
