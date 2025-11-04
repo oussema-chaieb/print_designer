@@ -453,6 +453,10 @@ const handleMouseUp = (e, tablewidth) => {
 			tr td:last-child {
 				border-right-style: none !important;
 			}
+			/* Also remove bottom border on the last row */
+			tr:last-child td {
+				border-bottom-style: none !important;
+			}
 		}
 	}
 }

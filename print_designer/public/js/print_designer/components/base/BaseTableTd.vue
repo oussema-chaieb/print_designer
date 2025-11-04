@@ -72,7 +72,4 @@ tr td:first-child {
 tr td:last-child {
 	border-right-style: solid !important;
 }
-.table-container.no-outer-border tr:last-child td {
-	border-bottom-style: none !important;
-}
 </style>
