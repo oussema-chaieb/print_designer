@@ -25,25 +25,26 @@
 				}
 			"
 		>
-			<table class="printTable">
-				<thead>
-					<tr v-if="columns.length">
-						<th
-							:style="[
-								'cursor: pointer;',
-								column.width && {
-									width: `${column.width}%`,
-									maxWidth: `${column.width}%`,
-								},
-								headerStyleSansRadius,
-								headerCornerStyle(index),
-								column.applyStyleToHeader && column.style,
-							]"
-							v-for="(column, index) in columns"
-							:class="
-								(menu?.index == index || column == selectedColumn) &&
-								'current-column'
-							"
+            <table class="printTable">
+                <thead>
+                    <tr v-if="columns.length">
+                        <th
+                            :style="[
+                                'cursor: pointer;',
+                                column.width && {
+                                    width: `${column.width}%`,
+                                    maxWidth: `${column.width}%`,
+                                },
+                                headerStyleSansRadius,
+                                headerCornerStyle(index),
+                                removeOuterBorder && headerOuterEdgeStyle(index),
+                                column.applyStyleToHeader && column.style,
+                            ]"
+                            v-for="(column, index) in columns"
+                            :class="
+                                (menu?.index == index || column == selectedColumn) &&
+                                'current-column'
+                            "
 							:key="column.fieldname"
 							:draggable="columnDragging"
 							@dragstart="dragstart($event, index)"
@@ -81,30 +82,29 @@
 						</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr
-						v-if="columns.length"
-						v-for="row in MainStore.docData[table?.fieldname]?.slice(
-							0,
-							PreviewRowNo || 3
-						) || [{}]"
-						:key="row.idx"
-					>
-						<BaseTableTd
-							v-bind="{
-								row,
-								columns,
-								style,
-								labelStyle,
-								selectedDynamicText,
-								setSelectedDynamicText,
-								table,
-								altStyle,
-							}"
-						/>
-					</tr>
-				</tbody>
-			</table>
+                <tbody>
+                    <tr
+                        v-if="columns.length"
+                        v-for="(row, rowIdx) in previewRows"
+                        :key="row.idx ?? rowIdx"
+                    >
+                        <BaseTableTd
+                            v-bind="{
+                                row,
+                                columns,
+                                style,
+                                labelStyle,
+                                selectedDynamicText,
+                                setSelectedDynamicText,
+                                table,
+                                altStyle,
+                                removeOuterBorder,
+                                isLastRow: rowIdx === previewRows.length - 1,
+                            }"
+                        />
+                    </tr>
+                </tbody>
+            </table>
 		</div>
 		<BaseResizeHandles
 			v-if="
@@ -193,14 +193,33 @@ const headerCornerStyle = (idx) => {
     };
 };
 
+// Inline suppression for header outer edges when removeOuterBorder is enabled
+const headerOuterEdgeStyle = (idx) => {
+    if (!removeOuterBorder?.value) return "";
+    const lastIdx = (columns?.value?.length || 0) - 1;
+    const styles = [];
+    styles.push("border-top-style: none !important;");
+    if (idx === 0) styles.push("border-left-style: none !important;");
+    if (idx === lastIdx) styles.push("border-right-style: none !important;");
+    return styles.join(" ");
+};
+
 watch(
-	() => selectedColumn.value,
-	(value) => {
-		if (value) {
-			MainStore.frappeControls.applyStyleToHeader?.set_value(value.applyStyleToHeader);
-		}
-	}
+    () => selectedColumn.value,
+    (value) => {
+        if (value) {
+            MainStore.frappeControls.applyStyleToHeader?.set_value(value.applyStyleToHeader);
+        }
+    }
 );
+
+// Rows visible in preview; used to decide last row for bottom-edge logic
+const previewRows = computed(() => {
+    const rows = MainStore.docData[table?.value?.fieldname] || [];
+    const count = PreviewRowNo?.value || 3;
+    const sliced = rows.slice(0, count);
+    return sliced.length ? sliced : [{}];
+});
 
 const setSelectedDynamicText = (value, isLabel) => {
 	if (

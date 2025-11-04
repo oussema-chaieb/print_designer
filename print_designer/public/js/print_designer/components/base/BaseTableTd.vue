@@ -1,10 +1,15 @@
 <template>
-	<td
-		v-for="column in columns"
-		:key="column.fieldname"
-		:style="[style, altStyle && row.idx % 2 == 0 && altStyle, column.style]"
-		@click.self="setSelectedDynamicText(null)"
-	>
+    <td
+        v-for="(column, colIdx) in columns"
+        :key="column.fieldname ?? colIdx"
+        :style="[
+            style,
+            altStyle && row.idx % 2 == 0 && altStyle,
+            column.style,
+            removeOuterBorder && outerEdgeStyle(colIdx, columns.length, isLastRow),
+        ]"
+        @click.self="setSelectedDynamicText(null)"
+    >
 		<template
 			v-for="field in column?.dynamicContent"
 			:key="`${field?.parentField}${field?.fieldname}`"
@@ -55,11 +60,30 @@ const props = defineProps({
 		type: Object,
 		required: false,
 	},
-	setSelectedDynamicText: {
-		type: Function,
-		required: false,
-	},
+    setSelectedDynamicText: {
+        type: Function,
+        required: false,
+    },
+    removeOuterBorder: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+    isLastRow: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 });
+
+// Inline suppression for body outer edges when removeOuterBorder is enabled
+const outerEdgeStyle = (colIdx, totalCols, isLastRow) => {
+    const styles = [];
+    if (colIdx === 0) styles.push("border-left-style: none !important;");
+    if (colIdx === totalCols - 1) styles.push("border-right-style: none !important;");
+    if (isLastRow) styles.push("border-bottom-style: none !important;");
+    return styles.join(" ");
+};
 </script>
 
 <style lang="scss" scoped>
